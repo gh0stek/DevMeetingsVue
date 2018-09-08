@@ -14,10 +14,23 @@
     </ul>
     <!-- 5. v-if can be helpful with conditional statements -->
     <p v-if="!products.length">No products!</p>
+    <form @submit.prevent="onSubmit()">
+      <!--3- 1. name attribute is now required as well as v-validate with its own DSL values -->
+      <input
+        name="product"
+        v-model="newProduct.name"
+        v-validate="'required|min:3'"
+      >
+      <button>Add</button>
+      <!--3- 2. errors are added by default when validation is initialized and have some useful methods -->
+      <div v-show="errors.has('product')">
+        {{ errors.first('product') }}
+      </div>
+    </form>
     <!-- 6. v-on adds an handler and :click is the name of the event, then goes the function to invoke -->
     <button v-on:click="removeLast()">Remove last item</button>
-    <button v-on:click="addNew(product)">Add new item</button>
-    <input v-model="product"  placeholder="add multiple lines">
+    <!-- <button v-on:click="addNew(product)">Add new item</button>
+    <input v-model="product"  placeholder="add multiple lines"> -->
   </div>
 </template>
 
@@ -28,7 +41,6 @@ import uuid from 'uuid/v4';
 
 export default {
   name: 'app',
-  product:'',
 
   //11/ 5. Data can no longer be just an object to prevent accidental shared state
   data() {
@@ -39,7 +51,11 @@ export default {
       }, {
         id: 1,
         name: 'Pizza'
-      }]
+      }],
+      product:'',
+      newProduct: {
+        name: ''
+      }
     }
   },
   methods: {
@@ -50,6 +66,21 @@ export default {
       this.products.push({
           id:uuid(),
           name:product
+      });
+    },
+    onSubmit() {
+      // 3. On the JS side we need to use yet another injected value called $validator to validate all the fields
+      this.$validator.validateAll().then(result => {
+        if (!result) {
+          return;
+        }
+        this.products.push({
+          id: uuid(),
+          ...this.newProduct
+        });
+        this.newProduct.name = '';
+        // 4/ and reset validation state after adding a product
+        this.$validator.reset();
       });
     }
   }

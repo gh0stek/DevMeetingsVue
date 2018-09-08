@@ -1,10 +1,12 @@
 import Vue from 'vue'
-// The whole App component is now imported
 import App from './App.vue'
+//3/ Packages require some initiation, here's the most common one
+import VeeValidate from 'vee-validate';
 
-Vue.config.productionTip = false
+Vue.use(VeeValidate);
 
-//3/ To bind Vue app to some specific element we can also get a render function with $mount
+Vue.config.productionTip = false;
+
 new Vue({
   render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');
