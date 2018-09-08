@@ -4,21 +4,9 @@
   <div id="app">
     <h1>task1</h1>
     <h2>Products list</h2>
-    <product-list :products="products"></product-list>
+    <ProductList :products="products"></ProductList>
     <!-- 5. v-if can be helpful with conditional statements -->
-    <form @submit.prevent="onSubmit()">
-      <!--3- 1. name attribute is now required as well as v-validate with its own DSL values -->
-      <input
-        name="product"
-        v-model="newProduct.name"
-        v-validate="'required|min:3'"
-      >
-      <button>Add</button>
-      <!--3- 2. errors are added by default when validation is initialized and have some useful methods -->
-      <div v-show="errors.has('product')">
-        {{ errors.first('product') }}
-      </div>
-    </form>
+    <add-product @add-product="onAddProduct"></add-product>
     <!-- 6. v-on adds an handler and :click is the name of the event, then goes the function to invoke -->
     <button v-on:click="removeLast()">Remove last item</button>
 
@@ -54,12 +42,13 @@
 <script>
 // 4. Now App is not mounted itself, we're just creating a component (more on that later - hold your horses!)
 import uuid from 'uuid/v4';
-import ProductList from './components/ProductList'
-
+import ProductList from './components/ProductList';
+import AddProduct from './components/AddProduct';
 export default {
   name: 'app',
   components: {
-    ProductList
+    ProductList,
+    AddProduct
   },
   //11/ 5. Data can no longer be just an object to prevent accidental shared state
   data() {
@@ -120,6 +109,9 @@ export default {
         this.newOrder.name = '';
         this.$validator.reset();
       });
+    },
+    onAddProduct(product) {
+      this.products.push(product);
     }
   }
 }
