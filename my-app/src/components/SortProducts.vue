@@ -1,21 +1,25 @@
-//8/ Template is the same as it was, the only difference is 1 root element
 <template>
-    <div>{{ product.name }}</div>
+  <button v-on:click="SortProducts()">Sort</button>
 </template>
 
 <script>
-
 export default {
-  name: "ProductItem",
+  name: "SortProducts",
   // The case is, we have to define props (inputs)
   props: {
     // Here we also added some basic props validation
-    product: {
-      type: Object
+    products: {
+      type: Array
+    }
+  },
+  methods:{
+    SortProducts(){
+      this.$emit('sort-products');
     }
   }
 };
 </script>
 
 <style scoped>
+
 </style>

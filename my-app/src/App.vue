@@ -8,7 +8,8 @@
     <!-- 5. v-if can be helpful with conditional statements -->
     <add-product @add-product="onAddProduct"></add-product>
     <!-- 6. v-on adds an handler and :click is the name of the event, then goes the function to invoke -->
-    <button v-on:click="removeLast()">Remove last item</button>
+    <!-- <button v-on:click="onSortProducts()">Sort</button> -->
+    <sort-products @sort-products="onSortProducts">Sort</sort-products>
 
 
 
@@ -44,21 +45,24 @@
 import uuid from 'uuid/v4';
 import ProductList from './components/ProductList';
 import AddProduct from './components/AddProduct';
+import SortProducts from './components/SortProducts';
+
 export default {
   name: 'app',
   components: {
     ProductList,
-    AddProduct
+    AddProduct,
+    SortProducts
   },
   //11/ 5. Data can no longer be just an object to prevent accidental shared state
   data() {
     return {
       products: [{
         id: 0,
-        name: 'Coffee'
+        name: 'Pizza'
       }, {
         id: 1,
-        name: 'Pizza'
+        name: 'Coffee'
       }],
       orders:[{
         id: 0,
@@ -112,6 +116,9 @@ export default {
     },
     onAddProduct(product) {
       this.products.push(product);
+    },
+    onSortProducts(){
+      this.products.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);});
     }
   }
 }
