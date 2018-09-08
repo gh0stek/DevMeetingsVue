@@ -1,16 +1,11 @@
 <!--10- 1. There's a <template> part -->
 <template>
 
-
   <div id="app">
     <h1>task1</h1>
-    <h2>My awesome list</h2>
+    <h2>Products list</h2>
     <ul>
-      <!-- 2. Then, we're using built-in v-for directive to iterate over products -->
       <li v-for="p in products" :key="p.id">{{ p.name }}</li>      
-      <!-- <li v-fonpmr="p in products">{{ p.name }}
-      <button v-on:click="removeSelected(p.id)">Remove</button> -->
-    <!-- </li> -->
     </ul>
     <!-- 5. v-if can be helpful with conditional statements -->
     <p v-if="!products.length">No products!</p>
@@ -29,8 +24,32 @@
     </form>
     <!-- 6. v-on adds an handler and :click is the name of the event, then goes the function to invoke -->
     <button v-on:click="removeLast()">Remove last item</button>
-    <!-- <button v-on:click="addNew(product)">Add new item</button>
-    <input v-model="product"  placeholder="add multiple lines"> -->
+
+
+
+    <h2>Orders list</h2>
+    <ul>
+      <li v-for="o in orders" :key="o.id">{{ o.name }}</li>      
+    </ul>
+    <!-- 5. v-if can be helpful with conditional statements -->
+    <p v-if="!orders.length">No orders!</p>
+    <form @submit.prevent="onSubmitOrders()">
+      <!--3- 1. name attribute is now required as well as v-validate with its own DSL values -->
+      <input
+        name="order"
+        v-model="newOrder.name"
+        v-validate="'included:products'"
+        type="text"
+      >
+      <button>Add</button>
+      <!--3- 2. errors are added by default when validation is initialized and have some useful methods -->
+      <div v-show="errors.has('order')">
+        {{ errors.first('order') }}
+      </div>
+    </form>
+    <!-- 6. v-on adds an handler and :click is the name of the event, then goes the function to invoke -->
+    <button v-on:click="removeLast()">Remove last item</button>
+    
   </div>
 </template>
 
@@ -52,8 +71,14 @@ export default {
         id: 1,
         name: 'Pizza'
       }],
-      product:'',
+      orders:[{
+        id: 0,
+        name: 'Coffee'
+      }],
       newProduct: {
+        name: ''
+      },
+      newOrder: {
         name: ''
       }
     }
@@ -80,6 +105,19 @@ export default {
         });
         this.newProduct.name = '';
         // 4/ and reset validation state after adding a product
+        this.$validator.reset();
+      });
+    },
+    onSubmitOrders() {
+      this.$validator.validateAll().then(result => {
+        if (!result) {
+          return;
+        }
+        this.ordrs.push({
+          id: uuid(),
+          ...this.newOrder
+        });
+        this.newOrder.name = '';
         this.$validator.reset();
       });
     }
