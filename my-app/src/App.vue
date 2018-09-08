@@ -46,6 +46,7 @@ import uuid from 'uuid/v4';
 import ProductList from './components/ProductList';
 import AddProduct from './components/AddProduct';
 import SortProducts from './components/SortProducts';
+import axios from 'axios';
 
 export default {
   name: 'app',
@@ -54,15 +55,19 @@ export default {
     AddProduct,
     SortProducts
   },
+  async created() {
+    // 4. products.json has been added to the 'public' directory and it's just an array that we had previously
+    this.products = await axios.get('products.json').then(res => res.data);
+  },
   //11/ 5. Data can no longer be just an object to prevent accidental shared state
   data() {
     return {
       products: [{
-        id: 0,
-        name: 'Pizza'
-      }, {
-        id: 1,
-        name: 'Coffee'
+          id: 0,
+          name: 'Pizza'
+        }, {
+          id: 1,
+          name: 'Coffee'
       }],
       orders:[{
         id: 0,
