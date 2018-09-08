@@ -7,8 +7,9 @@ const store = {
     products: []
   },
   //6/ And methods to update
-  async fetchProducts() {
-    this.state.products = await axios.get('products.json').then(res => res.data);
+  async fetchProducts(searchText) {
+    if (searchText == null || searchText == '') this.state.products = await axios.get('https://api.openbrewerydb.org/breweries').then(res => res.data);
+    else this.state.products = await axios.get('https://api.openbrewerydb.org/breweries?by_name='+searchText).then(res => res.data);
   },
   addProduct(product) {
     this.state.products.push(product);

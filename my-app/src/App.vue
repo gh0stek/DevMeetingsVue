@@ -10,7 +10,13 @@
     <!-- 6. v-on adds an handler and :click is the name of the event, then goes the function to invoke -->
     <!-- <button v-on:click="onSortProducts()">Sort</button> -->
     <sort-products @sort-products="onSortProducts">Sort</sort-products>
-
+    <form @submit.prevent="OnSearch(searchText)">
+      <input
+        name="product"
+        v-model="searchText"
+      >
+      <button>Search</button>
+    </form>
 
 
     <h2>Orders list</h2>
@@ -69,6 +75,7 @@ export default {
       newProduct: {
         name: ''
       },
+      searchText:'',
       newOrder: {
         name: ''
       }
@@ -117,7 +124,10 @@ export default {
     },
     onSortProducts(){
       this.sharedState.products.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);});
-    }
+    },
+  OnSearch(searchText) {
+    store.fetchProducts(searchText);
+  },
   }
 }
 </script>
