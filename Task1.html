@@ -31,7 +31,8 @@
     <p v-if="!products.length">No products!</p>
     <!-- 6. v-on adds an handler and :click is the name of the event, then goes the function to invoke -->
     <button v-on:click="removeLast()">Remove last item</button>
-    <button v-on:click="addNew()">Add new item</button>
+    <button v-on:click="addNew(product)">Add new item</button>
+    <input v-model="product"  placeholder="add multiple lines">
   </div>
 
 
@@ -47,7 +48,8 @@
         }, {
           id: 1,
           name: 'Pizza'
-        }]
+        }],
+        product:''
       },
       // 3. To get some events from user we can define a method in 'methods'
       methods: {
@@ -55,12 +57,11 @@
         removeLast() {
           this.products.pop();
         },
-        addNew() {
+        addNew(product) {
           this.products.push({
-                  id:2,
-                  name:'dupa'
-              }
-          );
+              id:3,
+              name:product
+          });
         }
       }
     })
