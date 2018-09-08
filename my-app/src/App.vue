@@ -4,11 +4,8 @@
   <div id="app">
     <h1>task1</h1>
     <h2>Products list</h2>
-    <ul>
-      <li v-for="p in products" :key="p.id">{{ p.name }}</li>      
-    </ul>
+    <product-list :products="products"></product-list>
     <!-- 5. v-if can be helpful with conditional statements -->
-    <p v-if="!products.length">No products!</p>
     <form @submit.prevent="onSubmit()">
       <!--3- 1. name attribute is now required as well as v-validate with its own DSL values -->
       <input
@@ -57,10 +54,13 @@
 <script>
 // 4. Now App is not mounted itself, we're just creating a component (more on that later - hold your horses!)
 import uuid from 'uuid/v4';
+import ProductList from './components/ProductList'
 
 export default {
   name: 'app',
-
+  components: {
+    ProductList
+  },
   //11/ 5. Data can no longer be just an object to prevent accidental shared state
   data() {
     return {
