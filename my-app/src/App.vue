@@ -4,7 +4,7 @@
   <div id="app">
     <h1>task1</h1>
     <h2>Products list</h2>
-    <ProductList :products="products"></ProductList>
+    <ProductList :products="sharedState.products"></ProductList>
     <!-- 5. v-if can be helpful with conditional statements -->
     <add-product @add-product="onAddProduct"></add-product>
     <!-- 6. v-on adds an handler and :click is the name of the event, then goes the function to invoke -->
@@ -46,7 +46,7 @@ import uuid from 'uuid/v4';
 import ProductList from './components/ProductList';
 import AddProduct from './components/AddProduct';
 import SortProducts from './components/SortProducts';
-import axios from 'axios';
+import store from '../store';
 
 export default {
   name: 'app',
@@ -55,20 +55,13 @@ export default {
     AddProduct,
     SortProducts
   },
-  async created() {
-    // 4. products.json has been added to the 'public' directory and it's just an array that we had previously
-    this.products = await axios.get('products.json').then(res => res.data);
+  created() {
+    store.fetchProducts();
   },
   //11/ 5. Data can no longer be just an object to prevent accidental shared state
   data() {
     return {
-      products: [{
-          id: 0,
-          name: 'Pizza'
-        }, {
-          id: 1,
-          name: 'Coffee'
-      }],
+      sharedState: store.state,
       orders:[{
         id: 0,
         name: 'Coffee'
@@ -120,10 +113,10 @@ export default {
       });
     },
     onAddProduct(product) {
-      this.products.push(product);
+      store.addProduct(product);
     },
     onSortProducts(){
-      this.products.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);});
+      this.sharedState.products.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);});
     }
   }
 }
